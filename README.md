@@ -48,7 +48,6 @@ project_report.pdf
 - Linux (probado en Ubuntu)
 - GCC
 - Make
-- Librería pthread
 - Librería [libiec6180-1.5](https://github.com/mz-automation/libiec61850/blob/v1.5)
 - Switch compatible con TSN
 
