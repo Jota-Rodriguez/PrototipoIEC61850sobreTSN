@@ -1,0 +1,454 @@
+---
+title: "Estadísticas SV 2"
+author: "Joan Pau Rodríguez Sureda"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r cargar datos, echo=FALSE}
+muestreo_SV_250 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/Caracterizacion_SV.csv", header = TRUE, sep = ";", dec = ",")
+TOTAL_SV_250 <- as.numeric(gsub(",", ".", muestreo_SV_250$TOTAL * 1e6))
+media <- mean(TOTAL_SV_250)
+desv <- sd(TOTAL_SV_250)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("Tiempos totales de ejecución sin filtrar SV\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(TOTAL_SV_250)
+
+TOTAL_SV_250 <- TOTAL_SV_250[
+  TOTAL_SV_250 >= lim_inf &
+  TOTAL_SV_250 <= lim_sup
+]
+range(TOTAL_SV_250)
+
+COMPUTATIONAL_SV_250 <- as.numeric(gsub(",", ".", muestreo_SV_250$COMPUTATIONAL * 1e6))
+media <- mean(COMPUTATIONAL_SV_250)
+desv <- sd(COMPUTATIONAL_SV_250)
+
+#Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("\nTiempos totales de computación sin filtrar\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(COMPUTATIONAL_SV_250)
+
+COMPUTATIONAL_SV_250 <- COMPUTATIONAL_SV_250[COMPUTATIONAL_SV_250 >= lim_inf & COMPUTATIONAL_SV_250 <= lim_sup]
+range(COMPUTATIONAL_SV_250)
+```
+
+```{r funcion formato resultados, echo=FALSE}
+summary_formateado <- function(x, digits = 3) {
+  if (!is.numeric(x)) {
+    stop("El vector debe ser numérico.")
+  }
+
+  # Guardar configuración actual
+  old_scipen <- getOption("scipen")
+  options(scipen = 999)
+
+  # Calcular resumen
+  resumen <- summary(x)
+
+  # Imprimir con formato, sin comillas
+  print(format(resumen, digits = digits, nsmall = digits, scientific = FALSE), quote = FALSE)
+
+  # Restaurar configuración original
+  options(scipen = old_scipen)
+}
+```
+
+```{r Analisis SV}
+invisible("# Comentar que este programa es completamnete periodico o hacer mención de que se ha dicho")
+invisible(cat("Resumen de datos (unidades: μs):\n"))
+invisible(cat("- Tiempo total:\n"))
+summary_formateado(TOTAL_SV_250)
+sd(TOTAL_SV_250)
+quantile(TOTAL_SV_250, c(0.9, 0.95))
+invisible(cat("\n- Tiempo de computación:\n"))
+summary_formateado(COMPUTATIONAL_SV_250)
+sd(COMPUTATIONAL_SV_250)
+quantile(COMPUTATIONAL_SV_250, c(0.9, 0.95))
+
+
+hist(TOTAL_SV_250, 
+     breaks = "FD", 
+     main = "Distribución de tiempos totales por ciclo", 
+     xlab = "Tiempo (μs)", 
+     ylab = "Frecuencia", 
+     border = "skyblue3", 
+     )
+
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+
+media <- mean(TOTAL_SV_250)
+sd <- sd(TOTAL_SV_250)
+lim_inf <- media - desv
+lim_sup <- media + desv
+
+hist(TOTAL_SV_250, 
+     breaks = "FD", 
+     main = "Distribución de tiempos totales por ciclo (a 1 sd)", 
+     xlab = "Tiempo (μs)", 
+     ylab = "Frecuencia", 
+     border = "skyblue3", 
+     xlim = range(lim_inf, lim_sup)
+     )
+
+hist(COMPUTATIONAL_SV_250, 
+     breaks = "FD", 
+     main = "Distribución de tiempos computacionales por ciclo", 
+     xlab = "Tiempo (μs)", 
+     ylab = "Frecuencia", 
+     border = "skyblue4", 
+     )
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+
+media <- mean(COMPUTATIONAL_SV_250)
+sd <- sd(COMPUTATIONAL_SV_250)
+lim_inf <- media - desv
+lim_sup <- media + desv
+
+hist(COMPUTATIONAL_SV_250, 
+     breaks = "FD", 
+     main = "Distribución de tiempos computacionales por ciclo ", 
+     xlab = "Tiempo (μs)", 
+     ylab = "Frecuencia", 
+     border = "skyblue4", 
+     xlim = range(lim_inf, lim_sup)
+     )
+
+```
+
+```{r concentracion valores fuera del umbral SV, echo=FALSE}
+#Análisis cantidad de los valores fuera de lo previsto
+media_250 <- mean(TOTAL_SV_250)
+sd_250 <- sd(TOTAL_SV_250)
+
+umbral_0sd <- media_250
+umbral_2sd <- media_250 + 2 * sd_250
+umbral_3sd <- media_250 + 3 * sd_250
+
+df_umbral_0sd <- sum(TOTAL_SV_250 < umbral_0sd)
+df_umbral_2sd <- sum(TOTAL_SV_250 < umbral_2sd)
+df_umbral_3sd <- sum(TOTAL_SV_250 < umbral_3sd)
+
+length_tot <- length(TOTAL_SV_250)
+
+tabla_resultados <- data.frame(
+  Umbral = c("Media", "Media + 2 SD", "Media + 3 SD"),
+  Valor_Umbral = c(umbral_0sd, 
+                   umbral_2sd, 
+                   umbral_3sd),
+  N_Muestras_Superadas = c(df_umbral_0sd, 
+                           df_umbral_2sd, 
+                           df_umbral_3sd),
+  Porcentaje_Muestras_Superadas = c(df_umbral_0sd / length_tot * 100, 
+                                    df_umbral_2sd / length_tot * 100, 
+                                    df_umbral_3sd / length_tot * 100)
+)
+print(tabla_resultados)
+
+plot(TOTAL_SV_250, 
+     type = "h", 
+     col = "skyblue3", 
+     main = "Tiempos de totales de ciclo por ejecución", 
+     xlab = "Ejecución", 
+     ylab = "Tiempo (μs)"
+     )
+
+```
+
+```{r cargar datos GOOSE, echo=FALSE}
+muestreo_GOOSE_HP <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/Caracterizacion_HP.csv", header = TRUE, sep = ",", dec = ".")
+muestreo_GOOSE_LP <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/Caracterizacion_LP.csv", header = TRUE, sep = ",", dec = ".")
+TIME_G_HP <- as.numeric(muestreo_GOOSE_HP$Delta[-1] * 1e3)
+TIME_G_HP <- TIME_G_HP[TIME_G_HP > 0.03]
+media <- mean(TIME_G_HP)
+sd <- sd(TIME_G_HP)
+
+# Definir límites
+lim_inf <- media - 3 * sd
+lim_sup <- media + 3 * sd
+
+cat("Tiempos totales de ejecución sin filtrar HP\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(TIME_G_HP)
+length(TIME_G_HP)
+TIME_G_HP <- TIME_G_HP[TIME_G_HP >= lim_inf & TIME_G_HP <= lim_sup]
+
+TIME_G_LP <- as.numeric(muestreo_GOOSE_LP$Delta[-1])
+media <- mean(TIME_G_LP)
+sd <- sd(TIME_G_LP)
+
+# Definir límites
+lim_inf <- media - 3 * sd
+lim_sup <- media + 3 * sd
+
+cat("Tiempos totales de ejecución sin filtrar LP\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(TIME_G_LP)
+length(TIME_G_LP)
+TIME_G_LP <- TIME_G_LP[TIME_G_LP >= lim_inf & TIME_G_LP <= lim_sup]
+
+```
+
+```{r análisis de los valores instantáneos HP, echo=FALSE}
+#Se eliminan los valores por encima de 0.026 porque, por como está implementado 
+#el código de GOOSE HP se envían 4 mensajes en ráfaga y el primero de ellos no 
+#hace ninguna espera con respecto al anterior ciclo por lo que aparecen mensajes
+#con tiempos de transmisión casi instantáneos
+
+raw_HP  <- as.numeric(muestreo_GOOSE_HP$Delta[-1] * 1e3)
+tabla_frecuencias <- as.data.frame(table(raw_HP))
+
+tabla_frecuencias$Porcentaje <- 100 * tabla_frecuencias$Freq / sum(tabla_frecuencias$Freq)
+
+print(tabla_frecuencias)
+```
+
+```{r Analisis preliminar GOOSE, echo=FALSE}
+invisible("# Comentar que este programa es completamnete periodico o hacer mención de que se ha dicho")
+invisible(cat("Resumen de datos (unidades: ms):\n"))
+invisible(cat("- Tiempo GOOSE HP:\n"))
+summary_formateado(TIME_G_HP)
+sd(TIME_G_HP)
+quantile(TIME_G_HP, c(0.9, 0.95))
+length(TIME_G_HP)
+
+hist(TIME_G_HP, 
+     breaks = "FD", 
+     main = "Distribución de tiempos totales por ciclo", 
+     xlab = "Tiempo (ms)", 
+     ylab = "Frecuencia", 
+     col = "skyblue3", 
+     border = "skyblue3",
+     )
+invisible(cat("Resumen de datos (unidades: s):\n"))
+invisible(cat("- Tiempo GOOSE LP:\n"))
+summary_formateado(TIME_G_LP)
+sd(TIME_G_LP)
+quantile(TIME_G_LP, c(0.9, 0.95))
+
+hist(TIME_G_LP, 
+     breaks = "FD", 
+     main = "Distribución de tiempos por ciclo", 
+     xlab = "Tiempo (s)", 
+     ylab = "Frecuencia", 
+     col = "skyblue4", 
+     border = "skyblue4",
+     )
+```
+
+```{r Valores HP fuera del umbral, echo=FALSE}
+#Análisis cantidad de los valores fuera de lo previsto
+media_G_HP <- mean(TIME_G_HP)
+sd_G_HP <- sd(TIME_G_HP)
+
+umbral_0sd_G_HP <- media_G_HP
+umbral_2sd_G_HP <- media_G_HP + 2 * sd_G_HP
+umbral_3sd_G_HP <- media_G_HP + 3 * sd_G_HP
+
+df_umbral_0sd_G_HP <- sum(TIME_G_HP > umbral_0sd_G_HP)
+df_umbral_2sd_G_HP <- sum(TIME_G_HP > umbral_2sd_G_HP)
+df_umbral_3sd_G_HP <- sum(TIME_G_HP > umbral_3sd_G_HP)
+
+length_tot <- length(TIME_G_HP)
+
+tabla_resultados_G_HP <- data.frame(
+  Umbral = c("Media", 
+             "Media + 2 SD", 
+             "Media + 3 SD"),
+  Valor_Umbral = c(umbral_0sd_G_HP, 
+                   umbral_2sd_G_HP, 
+                   umbral_3sd_G_HP),
+  N_Muestras_Superadas = c(df_umbral_0sd_G_HP, 
+                           df_umbral_2sd_G_HP, 
+                           df_umbral_3sd_G_HP),
+  Porcentaje_Muestras_Superadas = c(df_umbral_0sd_G_HP / length_tot * 100,
+                                    df_umbral_2sd_G_HP / length_tot * 100, 
+                                    df_umbral_3sd_G_HP / length_tot * 100)
+)
+print(tabla_resultados_G_HP)
+
+
+plot(TIME_G_HP, 
+     type = "h", 
+     col = "skyblue3", 
+     main = "Tiempos de ciclo por ejecución", 
+     xlab = "Ejecución", 
+     ylab = "Tiempo (ms)"
+     )
+
+plot(TIME_G_LP, 
+     type = "h", 
+     col = "skyblue4", 
+     main = "Tiempos de ciclo por ejecución", 
+     xlab = "Ejecución", 
+     ylab = "Tiempo (s)"
+     )
+```
+
+
+```{r separacion valores fuera umbral, echo=FALSE}
+raw_SV_250  <- as.numeric(gsub(",", ".", muestreo_SV_250$TOTAL * 1e6))
+media_250 <- mean(raw_SV_250)
+sd_250 <- sd(raw_SV_250)
+
+umbral_0sd <- media_250
+umbral_2sd <- media_250 + 2 * sd_250
+umbral_3sd <- media_250 + 3 * sd_250
+
+#Análisis concentración de los valores fuera de lo previsto
+fuera_umbral_0sd <- raw_SV_250 > umbral_0sd
+fuera_umbral_2sd <- raw_SV_250 > umbral_2sd
+fuera_umbral_3sd <- raw_SV_250 > umbral_3sd
+
+rle_result_0sd <- rle(fuera_umbral_0sd)
+rle_result_2sd <- rle(fuera_umbral_2sd)
+rle_result_3sd <- rle(fuera_umbral_3sd)
+
+# Convertir a data.frame
+library(data.table)
+
+bloques_0sd <- data.table(longitud = rle_result_0sd$lengths,
+                      estado = rle_result_0sd$values)
+bloques_2sd <- data.table(longitud = rle_result_2sd$lengths,
+                      estado = rle_result_2sd$values)
+bloques_3sd <- data.table(longitud = rle_result_3sd$lengths,
+                      estado = rle_result_3sd$values)
+
+# Calcular inicio y fin de cada bloque
+bloques_0sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_0sd[, fin := inicio + longitud - 1]
+bloques_2sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_2sd[, fin := inicio + longitud - 1]
+bloques_3sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_3sd[, fin := inicio + longitud - 1]
+
+# Filtrar solo los bloques donde estado == TRUE
+bloques_fuera_0sd <- bloques_0sd[estado == TRUE]
+bloques_fuera_2sd <- bloques_2sd[estado == TRUE]
+bloques_fuera_3sd <- bloques_3sd[estado == TRUE]
+
+#Análisis separación entre bloques valores fuera de lo previsto
+# Calcular separación entre los inicios de bloques fuera del umbral
+separaciones_0sd <- bloques_fuera_0sd$inicio[-1] - bloques_fuera_0sd$fin[-nrow(bloques_fuera_0sd)]
+separaciones_2sd <- bloques_fuera_2sd$inicio[-1] - bloques_fuera_2sd$fin[-nrow(bloques_fuera_2sd)]
+separaciones_3sd <- bloques_fuera_3sd$inicio[-1] - bloques_fuera_3sd$fin[-nrow(bloques_fuera_3sd)]
+
+# Agregar al dataframe
+bloques_fuera_0sd[, separacion_con_anterior_0sd := c(NA, separaciones_0sd)]
+bloques_fuera_2sd[, separacion_con_anterior_2sd := c(NA, separaciones_2sd)]
+bloques_fuera_3sd[, separacion_con_anterior_3sd := c(NA, separaciones_3sd)]
+
+# Ver resultado completo
+print(bloques_fuera_0sd)
+print(bloques_fuera_2sd)
+print(bloques_fuera_3sd)
+
+#plot(tiempos, type = "l", col = "darkblue", main = "Tiempos de ciclo por ejecución", xlab = "Ejecución", ylab = "Tiempo (ms)")
+#plot(density(tiempos), main = "Densidad de tiempos de ciclo", xlab = "Tiempo (ms)", col = "red", lwd = 2)
+#library(ggplot2)
+#ggplot(df, aes(x = categoria, y = tiempo)) +
+ # geom_violin(fill = "lightblue") +
+  #geom_boxplot(width = 0.1, fill = "white") +
+  #labs(title = "Distribución por categoría", x = "Prueba", y = "Tiempo (ms)")
+
+```
+
+```{r separacion valores fuera umbral HP, echo=FALSE}
+raw_HP  <- as.numeric(muestreo_GOOSE_HP$Delta[-1] * 1e3)
+media_HP <- mean(raw_HP)
+sd_HP <- sd(raw_HP)
+
+umbral_0sd <- media_HP
+umbral_2sd <- media_HP + 2 * sd_HP
+umbral_3sd <- media_HP + 3 * sd_HP
+
+#Análisis concentración de los valores fuera de lo previsto
+fuera_umbral_0sd <- raw_HP > umbral_0sd
+fuera_umbral_2sd <- raw_HP > umbral_2sd
+fuera_umbral_3sd <- raw_HP > umbral_3sd
+
+rle_result_0sd <- rle(fuera_umbral_0sd)
+rle_result_2sd <- rle(fuera_umbral_2sd)
+rle_result_3sd <- rle(fuera_umbral_3sd)
+
+# Convertir a data.frame
+library(data.table)
+
+bloques_0sd <- data.table(longitud = rle_result_0sd$lengths,
+                      estado = rle_result_0sd$values)
+bloques_2sd <- data.table(longitud = rle_result_2sd$lengths,
+                      estado = rle_result_2sd$values)
+bloques_3sd <- data.table(longitud = rle_result_3sd$lengths,
+                      estado = rle_result_3sd$values)
+
+# Calcular inicio y fin de cada bloque
+bloques_0sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_0sd[, fin := inicio + longitud - 1]
+bloques_2sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_2sd[, fin := inicio + longitud - 1]
+bloques_3sd[, inicio := cumsum(shift(longitud, fill = 0)) + 1]
+bloques_3sd[, fin := inicio + longitud - 1]
+
+# Filtrar solo los bloques donde estado == TRUE
+bloques_fuera_0sd <- bloques_0sd[estado == TRUE]
+bloques_fuera_2sd <- bloques_2sd[estado == TRUE]
+bloques_fuera_3sd <- bloques_3sd[estado == TRUE]
+
+#Análisis separación entre bloques valores fuera de lo previsto
+# Calcular separación entre los inicios de bloques fuera del umbral
+separaciones_0sd <- bloques_fuera_0sd$inicio[-1] - bloques_fuera_0sd$fin[-nrow(bloques_fuera_0sd)]
+separaciones_2sd <- bloques_fuera_2sd$inicio[-1] - bloques_fuera_2sd$fin[-nrow(bloques_fuera_2sd)]
+separaciones_3sd <- bloques_fuera_3sd$inicio[-1] - bloques_fuera_3sd$fin[-nrow(bloques_fuera_3sd)]
+
+# Agregar al dataframe
+bloques_fuera_0sd[, separacion_con_anterior_0sd := c(NA, separaciones_0sd)]
+bloques_fuera_2sd[, separacion_con_anterior_2sd := c(NA, separaciones_2sd)]
+bloques_fuera_3sd[, separacion_con_anterior_3sd := c(NA, separaciones_3sd)]
+
+# Ver resultado completo
+print(bloques_fuera_0sd)
+print(bloques_fuera_2sd)
+print(bloques_fuera_3sd)
+
+bloques_fuera_sd[, valores := lapply(
+  seq_len(.N),
+  function(i) raw_HP[inicio[i]:fin[i]]
+)]
+
+#plot(tiempos, type = "l", col = "darkblue", main = "Tiempos de ciclo por ejecución", xlab = "Ejecución", ylab = "Tiempo (ms)")
+#plot(density(tiempos), main = "Densidad de tiempos de ciclo", xlab = "Tiempo (ms)", col = "red", lwd = 2)
+#library(ggplot2)
+#ggplot(df, aes(x = categoria, y = tiempo)) +
+ # geom_violin(fill = "lightblue") +
+  #geom_boxplot(width = 0.1, fill = "white") +
+  #labs(title = "Distribución por categoría", x = "Prueba", y = "Tiempo (ms)")
+
+```

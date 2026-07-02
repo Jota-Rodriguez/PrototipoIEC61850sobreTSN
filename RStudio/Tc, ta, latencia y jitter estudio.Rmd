@@ -1,0 +1,1373 @@
+---
+title: "Análisis tc y ta"
+author: "Joan Pau Rodríguez Sureda"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r create_dataframe_ta, echo = TRUE}
+################################################################################
+# Los tiempos de aplicación, ta, con y sin mapping
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_SV_SM.csv", header = TRUE, sep = ";", dec = ",")
+ta_SV_SM <- aux$Diff * 1e6
+media <- mean(ta_SV_SM)
+desv <- sd(ta_SV_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta SV con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_SV_SM)
+length(ta_SV_SM)
+
+ta_SV_SM <- ta_SV_SM[ta_SV_SM >= lim_inf & ta_SV_SM <= lim_sup]
+ta_SV_SM <- head(ta_SV_SM, 1000000)
+
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_SV_NM.csv", header = TRUE, sep = ";", dec = ",")
+ta_SV_NM <- aux$Diff * 1e6
+media <- mean(ta_SV_NM)
+desv <- sd(ta_SV_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta SV sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_SV_NM)
+length(ta_SV_NM)
+
+ta_SV_NM <- ta_SV_NM[ta_SV_NM >= lim_inf & ta_SV_NM <= lim_sup]
+ta_SV_NM <- head(ta_SV_NM, 1000000)
+
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_HP_SM.csv", header = TRUE, sep = ";", dec = ",")
+ta_HP_SM <- aux$Diff * 1e6
+media <- mean(ta_HP_SM)
+desv <- sd(ta_HP_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta HP con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_HP_SM)
+length(ta_HP_SM)
+
+ta_HP_SM <- ta_HP_SM[ta_HP_SM >= lim_inf & ta_HP_SM <= lim_sup]
+ta_HP_SM <- head(ta_HP_SM, 100000)
+
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_HP_NM.csv", header = TRUE, sep = ";", dec = ",")
+ta_HP_NM <- aux$Diff * 1e6
+media <- mean(ta_HP_NM)
+desv <- sd(ta_HP_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta HP sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_HP_NM)
+length(ta_HP_NM)
+
+ta_HP_NM <- ta_HP_NM[ta_HP_NM >= lim_inf & ta_HP_NM <= lim_sup]
+ta_HP_NM <- head(ta_HP_NM, 100000)
+
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_LP_SM.csv", header = TRUE, sep = ";", dec = ",")
+ta_LP_SM <- aux$Diff * 1e6
+media <- mean(ta_LP_SM)
+desv <- sd(ta_LP_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta LP con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_LP_SM)
+length(ta_LP_SM)
+
+ta_LP_SM <- ta_LP_SM[ta_LP_SM >= lim_inf & ta_LP_SM <= lim_sup]
+ta_LP_SM <- head(ta_LP_SM, 5000)
+
+aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/ta_LP_NM.csv", header = TRUE, sep = ";", dec = ",")
+ta_LP_NM <- aux$Diff * 1e6
+media <- mean(ta_LP_NM)
+desv <- sd(ta_LP_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("ta LP sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(ta_LP_NM)
+length(ta_LP_NM)
+
+ta_LP_NM <- ta_LP_NM[ta_LP_NM >= lim_inf & ta_LP_NM <= lim_sup]
+ta_LP_NM <- head(ta_LP_NM, 5000)
+```
+
+```{r summary_ta, echo=TRUE, include=TRUE}
+print("Tiempo de aplicación de los mensajes SV con mapping en μs:")
+summary(ta_SV_SM)
+sd(ta_SV_SM)
+length(ta_SV_SM)
+quantile(ta_SV_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de aplicación de los mensajes SV sin mapping en μs:")
+summary(ta_SV_NM)
+sd(ta_SV_NM)
+length(ta_SV_NM)
+quantile(ta_SV_NM, probs = c(0.90, 0.95))
+
+print("Tiempo de aplicación de los mensajes HP con mapping en μs:")
+summary(ta_HP_SM)
+sd(ta_HP_SM)
+length(ta_HP_SM)
+quantile(ta_HP_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de aplicación de los mensajes HP sin mapping en μs:")
+summary(ta_HP_NM)
+sd(ta_HP_NM)
+length(ta_HP_NM)
+quantile(ta_HP_NM, probs = c(0.90, 0.95))
+
+print("Tiempo de aplicación de los mensajes LP con mapping en μs:")
+summary(ta_LP_SM)
+sd(ta_LP_SM)
+length(ta_LP_SM)
+quantile(ta_LP_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de aplicación de los mensajes LP sin mapping en μs:")
+summary(ta_LP_NM)
+sd(ta_LP_NM)
+length(ta_LP_NM)
+quantile(ta_LP_NM, probs = c(0.90, 0.95))
+
+```
+
+```{r create_dataframe_tc, echo = TRUE}
+# Los tiempos de red, tc, con y sin mapping
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_SV_SM <- aux[aux$Port.Rx == 3, c("Delta", "SmpCnt")]
+#d_tc_SV_SM <- tc_SV_SM$Delta * 1e6
+
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_SM_portRx1.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_SM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(1000000, nrow(aux1), nrow(aux2))
+
+tc_SV_SM <- data.frame(
+  SqNum_1 = aux1$SmpCnt,
+  SqNum_2 = aux2$SmpCnt,
+  Time_1  = aux1$Time,
+  Time_2  = aux2$Time,
+  Delta   = aux2$Time - aux1$Time
+)
+media <- mean(d_tc_SV_SM)
+desv <- sd(d_tc_SV_SM)
+d_tc_SV_SM <- tc_SV_SM$Delta * 1e6
+
+media <- mean(d_tc_SV_SM, na.rm = TRUE)
+desv  <- sd(d_tc_SV_SM, na.rm = TRUE)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc SV con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_SV_SM)
+length(d_tc_SV_SM)
+
+d_tc_SV_SM <- d_tc_SV_SM[d_tc_SV_SM >= lim_inf & d_tc_SV_SM <= lim_sup]
+d_tc_SV_SM <- head(d_tc_SV_SM, 1000000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_SV_NM <- aux[aux$Port.Rx == 3, c("Delta", "SmpCnt")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_NM_portRx1.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_SV_NM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(1000000, nrow(aux1), nrow(aux2))
+
+tc_SV_NM <- data.frame(
+  SqNum_1 = aux1$SmpCnt,
+  SqNum_2 = aux2$SmpCnt,
+  Time_1  = aux1$Time,
+  Time_2  = aux2$Time,
+  Delta   = aux2$Time - aux1$Time
+)
+d_tc_SV_NM <- tc_SV_NM$Delta * 1e6
+media <- mean(d_tc_SV_NM)
+desv <- sd(d_tc_SV_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc SV sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_SV_NM)
+length(d_tc_SV_NM)
+
+d_tc_SV_NM <- d_tc_SV_NM[d_tc_SV_NM >= lim_inf & d_tc_SV_NM <= lim_sup]
+d_tc_SV_NM <- head(d_tc_SV_NM, 1000000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_HP_SM <- aux[aux$Port.Rx == 3, c("Delta", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_SM_portRx1.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_SM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(100000, nrow(aux1), nrow(aux2))
+
+tc_HP_SM <- data.frame(
+  SqNum_1 = aux1$sqNum,
+  SqNum_2 = aux2$sqNum,
+  Time_1  = aux1$Time,
+  Time_2  = aux2$Time,
+  Delta   = aux2$Time - aux1$Time
+)
+d_tc_HP_SM <- tc_HP_SM$Delta * 1e6
+media <- mean(d_tc_HP_SM)
+desv <- sd(d_tc_HP_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc HP con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_HP_SM)
+length(d_tc_HP_SM)
+
+d_tc_HP_SM <- d_tc_HP_SM[d_tc_HP_SM >= lim_inf & d_tc_HP_SM <= lim_sup]
+d_tc_HP_SM <- head(d_tc_HP_SM, 100000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_HP_NM <- aux[aux$Port.Rx == 3, c("Delta", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_NM_portRx1.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_HP_NM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(100000, nrow(aux1), nrow(aux2))
+
+tc_HP_NM <- data.frame(
+  SqNum_1 = aux1$sqNum,
+  SqNum_2 = aux2$sqNum,
+  Time_1  = aux1$Time,
+  Time_2  = aux2$Time,
+  Delta   = aux2$Time - aux1$Time
+)
+d_tc_HP_NM <- tc_HP_NM$Delta * 1e6
+media <- mean(d_tc_HP_NM)
+desv <- sd(d_tc_HP_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc HP sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_HP_NM)
+length(d_tc_HP_NM)
+
+d_tc_HP_NM <- d_tc_HP_NM[d_tc_HP_NM >= lim_inf & d_tc_HP_NM <= lim_sup]
+d_tc_HP_NM <- head(d_tc_HP_NM, 100000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_LP_SM <- aux[aux$Port.Rx == 2, c("Delta", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_SM_portRx1.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(5000, nrow(aux1), nrow(aux2))
+
+tc_LP_SM <- data.frame(
+  SqNum_1 = aux1$sqNum,
+  SqNum_2 = aux2$sqNum,
+  Time_1  = aux1$Time,
+  Time_2  = aux2$Time,
+  Delta   = aux2$Time - aux1$Time
+)
+d_tc_LP_SM <- tc_LP_SM$Delta * 1e6
+media <- mean(d_tc_LP_SM)
+desv <- sd(d_tc_LP_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc LP con mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_LP_SM)
+length(d_tc_LP_SM)
+
+d_tc_LP_SM <- d_tc_LP_SM[d_tc_LP_SM >= lim_inf & d_tc_LP_SM <= lim_sup]
+d_tc_LP_SM <- head(d_tc_LP_SM, 5000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tc_LP_NM <- aux[aux$Port.Rx == 2, c("Delta", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/tc_LP_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(5000, nrow(aux1), nrow(aux2))
+
+tc_LP_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tc_LP_NM <- tc_LP_NM$Delta * 1e6
+media <- mean(d_tc_LP_NM)
+desv <- sd(d_tc_LP_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("tc LP sin mapping\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tc_LP_NM)
+length(d_tc_LP_NM)
+
+d_tc_LP_NM <- d_tc_LP_NM[d_tc_LP_NM >= lim_inf & d_tc_LP_NM <= lim_sup]
+d_tc_LP_NM <- head(d_tc_LP_NM, 5000)
+```
+
+```{r análisis de los valores instantáneos HP, echo=FALSE}
+#Se eliminan los valores por encima de 0.026 porque, por como está implementado 
+#el código de GOOSE HP se envían 4 mensajes en ráfaga y el primero de ellos no 
+#hace ninguna espera con respecto al anterior ciclo por lo que aparecen mensajes
+#con tiempos de transmisión casi instantáneos
+
+#raw_SV_250  <- as.numeric(muestreo_GOOSE_HP$Delta[-1] * 1e3)
+tabla_frecuencias <- as.data.frame(table(d_tc_SV_SM))
+
+tabla_frecuencias$Porcentaje <- 100 * tabla_frecuencias$Freq / sum(tabla_frecuencias$Freq)
+
+print(tabla_frecuencias)
+```
+
+```{r summary_tc, echo=TRUE, include=TRUE}
+print("Tiempo de red de los mensajes SV con mapping en μs:")
+summary(d_tc_SV_SM)
+sd(d_tc_SV_SM)
+length(d_tc_SV_SM)
+quantile(d_tc_SV_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de red de los mensajes SV sin mapping en μs:")
+summary(d_tc_SV_NM)
+sd(d_tc_SV_NM)
+length(d_tc_SV_NM)
+quantile(d_tc_SV_NM, probs = c(0.90, 0.95))
+
+print("Tiempo de red de los mensajes HP con mapping en μs:")
+summary(d_tc_HP_SM)
+sd(d_tc_HP_SM)
+length(d_tc_HP_SM)
+quantile(d_tc_HP_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de red de los mensajes HP sin mapping en μs:")
+summary(d_tc_HP_NM)
+sd(d_tc_HP_NM)
+length(d_tc_HP_NM)
+quantile(d_tc_HP_NM, probs = c(0.90, 0.95))
+
+print("Tiempo de red de los mensajes LP con mapping en μs:")
+summary(d_tc_LP_SM)
+sd(d_tc_LP_SM)
+length(d_tc_LP_SM)
+quantile(d_tc_LP_SM, probs = c(0.90, 0.95))
+
+print("Tiempo de red de los mensajes LP sin mapping en μs:")
+summary(d_tc_LP_NM)
+sd(d_tc_LP_NM)
+length(d_tc_LP_NM)
+quantile(d_tc_LP_NM, probs = c(0.90, 0.95))
+
+```
+
+```{r create_dataframe_tf, echo=TRUE, include=TRUE}
+
+# Los tiempos de red, añadiendo tráfico, con y sin mapping
+## SAMPLED VALUES ################################################################
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_SV_100_SM <- aux[aux$Port.Rx == 3, c("Delta", "SmpCnt")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_SM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(1000000, nrow(aux1), nrow(aux2))
+
+tf_SV_100_SM <- data.frame(
+  SqNum_1 = aux1$SmpCnt[1:n],
+  SqNum_2 = aux2$SmpCnt[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_SV_100_SM <- tf_SV_100_SM$Delta * 1e6
+media <- mean(d_tf_SV_100_SM)
+desv <- sd(d_tf_SV_100_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia SV con mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_SV_100_SM)
+length(d_tf_SV_100_SM)
+
+d_tf_SV_100_SM <- d_tf_SV_100_SM[d_tf_SV_100_SM >= lim_inf & d_tf_SV_100_SM <= lim_sup]
+length(d_tf_SV_100_SM)
+d_tf_SV_100_SM <- head(d_tf_SV_100_SM, 1000000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_SV_100_NM <- aux[aux$Port.Rx == 3, c("Delta", "SmpCnt")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_SV_100_NM_portRx3.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(1000000, nrow(aux1), nrow(aux2))
+
+tf_SV_100_NM <- data.frame(
+  SqNum_1 = aux1$SmpCnt[1:n],
+  SqNum_2 = aux2$SmpCnt[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_SV_100_NM <- tf_SV_100_NM$Delta * 1e6
+media <- mean(d_tf_SV_100_NM)
+desv <- sd(d_tf_SV_100_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia SV sin mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_SV_100_NM)
+length(d_tf_SV_100_NM)
+
+d_tf_SV_100_NM <- d_tf_SV_100_NM[d_tf_SV_100_NM >= lim_inf & d_tf_SV_100_NM <= lim_sup]
+length(d_tf_SV_100_NM)
+d_tf_SV_100_NM <- head(d_tf_SV_100_NM, 1000000)
+## GOOSE HIGH PRIORITY ################################################################
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_25_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_25_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_25_SM <- tf_HP_25_SM$Delta * 1e6
+media <- mean(d_tf_HP_25_SM)
+desv <- sd(d_tf_HP_25_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP con mapping con tráfico 25%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_25_SM)
+length(d_tf_HP_25_SM)
+
+d_tf_HP_25_SM <- d_tf_HP_25_SM[d_tf_HP_25_SM >= lim_inf & d_tf_HP_25_SM <= lim_sup]
+length(d_tf_HP_25_SM)
+d_tf_HP_25_SM <- head(d_tf_HP_25_SM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_25_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_25_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_25_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_25_NM <- tf_HP_25_NM$Delta * 1e6
+media <- mean(d_tf_HP_25_NM)
+desv <- sd(d_tf_HP_25_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP sin mapping con tráfico 25%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_25_NM)
+length(d_tf_HP_25_NM)
+
+d_tf_HP_25_NM <- d_tf_HP_25_NM[d_tf_HP_25_NM >= lim_inf & d_tf_HP_25_NM <= lim_sup]
+length(d_tf_HP_25_NM)
+d_tf_HP_25_NM <- head(d_tf_HP_25_NM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_50_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_50_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_50_SM <- tf_HP_50_SM$Delta * 1e6
+media <- mean(d_tf_HP_50_SM)
+desv <- sd(d_tf_HP_50_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP con mapping con tráfico 50%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_50_SM)
+length(d_tf_HP_50_SM)
+
+d_tf_HP_50_SM <- d_tf_HP_50_SM[d_tf_HP_50_SM >= lim_inf & d_tf_HP_50_SM <= lim_sup]
+length(d_tf_HP_50_SM)
+d_tf_HP_50_SM <- head(d_tf_HP_50_SM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_50_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_50_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_50_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_50_NM <- tf_HP_50_NM$Delta * 1e6
+media <- mean(d_tf_HP_50_NM)
+desv <- sd(d_tf_HP_50_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP sin mapping con tráfico 50%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_50_NM)
+length(d_tf_HP_50_NM)
+
+d_tf_HP_50_NM <- d_tf_HP_50_NM[d_tf_HP_50_NM >= lim_inf & d_tf_HP_50_NM <= lim_sup]
+length(d_tf_HP_50_NM)
+d_tf_HP_50_NM <- head(d_tf_HP_50_NM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_75_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_75_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_75_SM <- tf_HP_75_SM$Delta * 1e6
+media <- mean(d_tf_HP_75_SM)
+desv <- sd(d_tf_HP_75_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP con mapping con tráfico 75%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_75_SM)
+length(d_tf_HP_75_SM)
+
+d_tf_HP_75_SM <- d_tf_HP_75_SM[d_tf_HP_75_SM >= lim_inf & d_tf_HP_75_SM <= lim_sup]
+length(d_tf_HP_75_SM)
+d_tf_HP_75_SM <- head(d_tf_HP_75_SM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_75_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_75_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_75_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_75_NM <- tf_HP_75_NM$Delta * 1e6
+media <- mean(d_tf_HP_75_NM)
+desv <- sd(d_tf_HP_75_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP sin mapping con tráfico 75%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_75_NM)
+length(d_tf_HP_75_NM)
+
+d_tf_HP_75_NM <- d_tf_HP_75_NM[d_tf_HP_75_NM >= lim_inf & d_tf_HP_75_NM <= lim_sup]
+length(d_tf_HP_75_NM)
+d_tf_HP_75_NM <- head(d_tf_HP_75_NM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_100_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_100_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_100_SM <- tf_HP_100_SM$Delta * 1e6
+media <- mean(d_tf_HP_100_SM)
+desv <- sd(d_tf_HP_100_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP con mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_100_SM)
+length(d_tf_HP_100_SM)
+
+d_tf_HP_100_SM <- d_tf_HP_100_SM[d_tf_HP_100_SM >= lim_inf & d_tf_HP_100_SM <= lim_sup]
+length(d_tf_HP_100_SM)
+d_tf_HP_100_SM <- head(d_tf_HP_100_SM, 2000)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_HP_100_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_HP_100_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(2000, nrow(aux1), nrow(aux2))
+
+tf_HP_100_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_HP_100_NM <- tf_HP_100_NM$Delta * 1e6
+media <- mean(d_tf_HP_100_NM)
+desv <- sd(d_tf_HP_100_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia HP sin mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_HP_100_NM)
+length(d_tf_HP_100_NM)
+
+d_tf_HP_100_NM <- d_tf_HP_100_NM[d_tf_HP_100_NM >= lim_inf & d_tf_HP_100_NM <= lim_sup]
+length(d_tf_HP_100_NM)
+d_tf_HP_100_NM <- head(d_tf_HP_100_NM, 2000)
+
+## GOOSE LOW PRIORITY #################################################################
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_25_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_25_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_25_SM<- tf_LP_25_SM$Delta * 1e6
+media <- mean(d_tf_LP_25_SM)
+desv <- sd(d_tf_LP_25_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP con mapping con tráfico 25%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_25_SM)
+length(d_tf_LP_25_SM)
+
+d_tf_LP_25_SM <- d_tf_LP_25_SM[d_tf_LP_25_SM >= lim_inf & d_tf_LP_25_SM <= lim_sup]
+length(d_tf_LP_25_SM)
+d_tf_LP_25_SM <- head(d_tf_LP_25_SM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_25_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_25_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_25_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_25_NM <- tf_LP_25_NM$Delta * 1e6
+media <- mean(d_tf_LP_25_NM)
+desv <- sd(d_tf_LP_25_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP sin mapping con tráfico 25%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_25_NM)
+length(d_tf_LP_25_NM)
+
+d_tf_LP_25_NM <- d_tf_LP_25_NM[d_tf_LP_25_NM >= lim_inf & d_tf_LP_25_NM <= lim_sup]
+length(d_tf_LP_25_NM)
+d_tf_LP_25_NM <- head(d_tf_LP_25_NM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_50_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_50_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_50_SM <- tf_LP_50_SM$Delta * 1e6
+media <- mean(d_tf_LP_50_SM)
+desv <- sd(d_tf_LP_50_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP con mapping con tráfico 50%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_50_SM)
+length(d_tf_LP_50_SM)
+
+d_tf_LP_50_SM <- d_tf_LP_50_SM[d_tf_LP_50_SM >= lim_inf & d_tf_LP_50_SM <= lim_sup]
+length(d_tf_LP_50_SM)
+d_tf_LP_50_SM <- head(d_tf_LP_50_SM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_50_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_50_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_50_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_50_NM <- tf_LP_50_NM$Delta * 1e6
+media <- mean(d_tf_LP_50_NM)
+desv <- sd(d_tf_LP_50_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP sin mapping con tráfico 50%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_50_NM)
+length(d_tf_LP_50_NM)
+
+d_tf_LP_50_NM <- d_tf_LP_50_NM[d_tf_LP_50_NM >= lim_inf & d_tf_LP_50_NM <= lim_sup]
+length(d_tf_LP_50_NM)
+d_tf_LP_50_NM <- head(d_tf_LP_50_NM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_75_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_75_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_75_SM <- tf_LP_75_SM$Delta * 1e6
+media <- mean(d_tf_LP_75_SM)
+desv <- sd(d_tf_LP_75_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP con mapping con tráfico 75%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_75_SM)
+length(d_tf_LP_75_SM)
+
+d_tf_LP_75_SM <- d_tf_LP_75_SM[d_tf_LP_75_SM >= lim_inf & d_tf_LP_75_SM <= lim_sup]
+length(d_tf_LP_75_SM)
+d_tf_LP_75_SM <- head(d_tf_LP_75_SM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_75_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_75_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_75_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_75_NM <- tf_LP_75_NM$Delta * 1e6
+media <- mean(d_tf_LP_75_NM)
+desv <- sd(d_tf_LP_75_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP sin mapping con tráfico 75%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_75_NM)
+length(d_tf_LP_75_NM)
+
+d_tf_LP_75_NM <- d_tf_LP_75_NM[d_tf_LP_75_NM >= lim_inf & d_tf_LP_75_NM <= lim_sup]
+length(d_tf_LP_75_NM)
+d_tf_LP_75_NM <- head(d_tf_LP_75_NM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_SM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_100_SM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_SM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_SM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_100_SM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_100_SM <- tf_LP_100_SM$Delta * 1e6
+media <- mean(d_tf_LP_100_SM)
+desv <- sd(d_tf_LP_100_SM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP con mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_100_SM)
+length(d_tf_LP_100_SM)
+
+d_tf_LP_100_SM <- d_tf_LP_100_SM[d_tf_LP_100_SM >= lim_inf & d_tf_LP_100_SM <= lim_sup]
+length(d_tf_LP_100_SM)
+d_tf_LP_100_SM <- head(d_tf_LP_100_SM, 500)
+
+#aux <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_NM.csv", header = TRUE, sep = ",", dec = ".")
+#tf_LP_100_NM <- aux[aux$Port.Rx == 2, c("Delta", "sqNum", "stNum")]
+aux1 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_NM_portRx0.csv",
+                   header = TRUE, sep = ",", dec = ".")
+
+aux2 <- read.table("C:/Users/tafon/OneDrive - Universitat de les Illes Balears/Escritorio/RStudio/Recopilación Datos TFG/trafico_LP_100_NM_portRx2.csv",
+                   header = TRUE, sep = ",", dec = ".")
+n <- min(500, nrow(aux1), nrow(aux2))
+
+tf_LP_100_NM <- data.frame(
+  SqNum_1 = aux1$sqNum[1:n],
+  SqNum_2 = aux2$sqNum[1:n],
+  Time_1  = aux1$Time[1:n],
+  Time_2  = aux2$Time[1:n],
+  Delta   = aux2$Time[1:n] - aux1$Time[1:n]
+)
+d_tf_LP_100_NM <- tf_LP_100_NM$Delta * 1e6
+media <- mean(d_tf_LP_100_NM)
+desv <- sd(d_tf_LP_100_NM)
+
+# Definir límites
+lim_inf <- media - 3 * desv
+lim_sup <- media + 3 * desv
+
+cat("latencia LP sin mapping con tráfico 100%\n")
+cat("Media =", media, "\n")
+cat("SD =", desv, "\n")
+cat("Límite inferior =", lim_inf, "\n")
+cat("Límite superior =", lim_sup, "\n")
+range(d_tf_LP_100_NM)
+length(d_tf_LP_100_NM)
+
+d_tf_LP_100_NM <- d_tf_LP_100_NM[d_tf_LP_100_NM >= lim_inf & d_tf_LP_100_NM <= lim_sup]
+length(d_tf_LP_100_NM)
+d_tf_LP_100_NM <- head(d_tf_LP_100_NM, 500)
+
+```
+
+```{r summary_tf, echo=TRUE, include=TRUE}
+
+## SAMPLED VALUES ################################################################
+print("SAMPLED VALUES")
+print("Tiempo de red de los mensajes SV, 100% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_SV_100_SM)
+sd(d_tf_SV_100_SM)
+length(d_tf_SV_100_SM)
+
+print("Tiempo de red de los mensajes SV, 100% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_SV_100_NM)
+sd(d_tf_SV_100_NM)
+length(d_tf_SV_100_NM)
+## GOOSE HIGH PRIORITY ################################################################
+print("GOOSE HIGH PRIORITY")
+print("Tiempo de red de los mensajes HP, 25% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_HP_25_SM)
+sd(d_tf_HP_25_SM)
+length(d_tf_HP_25_SM)
+
+print("Tiempo de red de los mensajes HP, 25% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_HP_25_NM)
+sd(d_tf_HP_25_NM)
+length(d_tf_HP_25_NM)
+
+print("Tiempo de red de los mensajes HP, 50% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_HP_50_SM)
+sd(d_tf_HP_50_SM)
+length(d_tf_HP_50_SM)
+
+print("Tiempo de red de los mensajes HP, 50% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_HP_50_NM)
+sd(d_tf_HP_50_NM)
+length(d_tf_HP_50_NM)
+
+print("Tiempo de red de los mensajes HP, 75% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_HP_75_SM)
+sd(d_tf_HP_75_SM)
+length(d_tf_HP_75_SM)
+
+print("Tiempo de red de los mensajes HP, 75% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_HP_75_NM)
+sd(d_tf_HP_75_NM)
+length(d_tf_HP_75_NM)
+
+print("Tiempo de red de los mensajes HP, 100% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_HP_100_SM)
+sd(d_tf_HP_100_SM)
+length(d_tf_HP_100_SM)
+
+print("Tiempo de red de los mensajes HP, 100% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_HP_100_NM)
+sd(d_tf_HP_100_NM)
+length(d_tf_HP_100_NM)
+
+## GOOSE LOW PRIORITY #################################################################
+print("GOOSE LOW PRIORITY")
+print("Tiempo de red de los mensajes LP, 25% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_LP_25_SM)
+sd(d_tf_LP_25_SM)
+length(d_tf_LP_25_SM)
+
+print("Tiempo de red de los mensajes LP, 25% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_LP_25_NM)
+sd(d_tf_LP_25_NM)
+length(d_tf_LP_25_NM)
+
+print("Tiempo de red de los mensajes LP, 50% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_LP_50_SM)
+sd(d_tf_LP_50_SM)
+length(d_tf_LP_50_SM)
+
+print("Tiempo de red de los mensajes LP, 50% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_LP_50_NM)
+sd(d_tf_LP_50_NM)
+length(d_tf_LP_50_NM)
+
+print("Tiempo de red de los mensajes LP, 75% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_LP_75_SM)
+sd(d_tf_LP_75_SM)
+length(d_tf_LP_75_SM)
+
+print("Tiempo de red de los mensajes LP, 75% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_LP_75_NM)
+sd(d_tf_LP_75_NM)
+length(d_tf_LP_75_NM)
+
+print("Tiempo de red de los mensajes LP, 100% de ocupación de ventana y con mapping en μs:")
+summary(d_tf_LP_100_SM)
+sd(d_tf_LP_100_SM)
+length(d_tf_LP_100_SM)
+
+print("Tiempo de red de los mensajes LP, 100% de ocupación de ventana y sin mapping en μs:")
+summary(d_tf_LP_100_NM)
+sd(d_tf_LP_100_NM)
+length(d_tf_LP_100_NM)
+
+```
+```{r gráficos tendencias HP y LP, echo=TRUE, include=TRUE}
+library(ggplot2)
+library(cowplot)
+
+# Datos
+datos <- data.frame(
+  muestra = factor(c("0%", "25%", "50%", "75%", "100%"),
+                   levels = c("0%", "25%", "50%", "75%", "100%")),
+  media_HP_SM = c(15.30, 31.87, 62.39, 66.93, 93.52),
+  media_HP_NM = c(15.30, 31.87, 61.77, 66.44, 91.43),
+  jitter_HP_SM = c(1.75, 73.34, 132.77, 135.72, 136.30),
+  jitter_HP_NM = c(1.79, 75.54, 138.70, 137.78, 139.07),
+  media_LP_SM = c(15.24, 28.37, 62.29, 77.12, 105.84),
+  media_LP_NM = c(15.24, 27.06, 65.34, 81.81, 108.10),
+  jitter_LP_SM = c(0.28, 61.86, 121.87, 126.00, 123.76),
+  jitter_LP_NM = c(0.29, 71.37, 123.86, 131.55, 127.14)
+)
+
+# Tema común
+tema <- theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 14),
+    legend.position = "none"
+  )
+
+# Escala de colores común
+colores <- scale_colour_manual(
+  name = "Configuración",
+  values = c(
+    "Con mapeado" = "#F8766D",
+    "Sin mapeado" = "#00BFC4"
+  )
+)
+
+#-----------------------
+# Latencia HP
+#-----------------------
+
+p_lat_HP <- ggplot(datos, aes(x = muestra)) +
+  geom_line(aes(y = media_HP_SM, colour = "Con mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = media_HP_SM, colour = "Con mapeado"), size = 3) +
+  geom_line(aes(y = media_HP_NM, colour = "Sin mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = media_HP_NM, colour = "Sin mapeado"), size = 3) +
+  labs(
+    title = "GOOSE HP",
+    x = "Ocupación",
+    y = "Latencia [µs]"
+  ) +
+  colores +
+  tema
+
+#-----------------------
+# Jitter HP
+#-----------------------
+
+p_jit_HP <- ggplot(datos, aes(x = muestra)) +
+  geom_line(aes(y = jitter_HP_SM, colour = "Con mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = jitter_HP_SM, colour = "Con mapeado"), size = 3) +
+  geom_line(aes(y = jitter_HP_NM, colour = "Sin mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = jitter_HP_NM, colour = "Sin mapeado"), size = 3) +
+  labs(
+    title = "GOOSE HP",
+    x = "Ocupación",
+    y = "Jitter [µs]"
+  ) +
+  colores +
+  tema
+
+#-----------------------
+# Latencia LP
+#-----------------------
+
+p_lat_LP <- ggplot(datos, aes(x = muestra)) +
+  geom_line(aes(y = media_LP_SM, colour = "Con mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = media_LP_SM, colour = "Con mapeado"), size = 3) +
+  geom_line(aes(y = media_LP_NM, colour = "Sin mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = media_LP_NM, colour = "Sin mapeado"), size = 3) +
+  labs(
+    title = "GOOSE LP",
+    x = "Ocupación",
+    y = "Latencia [µs]"
+  ) +
+  colores +
+  tema
+
+#-----------------------
+# Jitter LP
+#-----------------------
+
+p_jit_LP <- ggplot(datos, aes(x = muestra)) +
+  geom_line(aes(y = jitter_LP_SM, colour = "Con mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = jitter_LP_SM, colour = "Con mapeado"), size = 3) +
+  geom_line(aes(y = jitter_LP_NM, colour = "Sin mapeado", group = 1), linewidth = 1) +
+  geom_point(aes(y = jitter_LP_NM, colour = "Sin mapeado"), size = 3) +
+  labs(
+    title = "GOOSE LP",
+    x = "Ocupación",
+    y = "Jitter [µs]"
+  ) +
+  colores +
+  tema
+
+#-----------------------
+# Leyenda única
+#-----------------------
+
+legend <- get_legend(
+  ggplot(datos, aes(x = muestra)) +
+    geom_line(aes(y = media_HP_SM, colour = "Con mapeado")) +
+    geom_line(aes(y = media_HP_NM, colour = "Sin mapeado")) +
+    colores +
+    theme_minimal() +
+    theme(legend.position = "bottom")
+)
+
+#-----------------------
+# Figura final
+#-----------------------
+
+panel <- plot_grid(
+  p_lat_HP,
+  p_jit_HP,
+  p_lat_LP,
+  p_jit_LP,
+  ncol = 2
+)
+
+plot_grid(
+  panel,
+  legend,
+  ncol = 1,
+  rel_heights = c(1, 0.08)
+)
+```
+
+```{r tests_ggplot, echo=TRUE, include=TRUE}
+library(ggplot2)
+library(cowplot)
+
+comparar_densidades <- function(vec1, vec2, titulo, unidades, nombre1 = "Con Map.", nombre2 = "Sin Map.") {
+  # Crear data.frame
+  df <- data.frame(
+    valor = c(vec1, vec2),
+    Leyenda = factor(c(rep(nombre1, length(vec1)), rep(nombre2, length(vec2))))
+  )
+  
+  # Calcular medias
+  medias <- data.frame(
+    Leyenda = c(nombre1, nombre2),
+    media = c(mean(vec1), mean(vec2))
+  )
+  
+  # Crear gráfico
+  p <- ggplot(df, aes(x = valor, fill = Leyenda, color = Leyenda)) +
+    geom_density(alpha = 0.3) +
+    geom_vline(data = medias, aes(xintercept = media, color = Leyenda),
+               linetype = "dashed", size = 1) +
+    labs(x = paste("Valor ", unidades), y = "Densidad",
+         title = titulo) +
+    theme_minimal()
+  
+  return(p)
+}
+
+p_sv_100 <- comparar_densidades(d_tf_SV_100_SM, d_tf_SV_100_NM, "SV 100% Ocupación", "[μs]")
+p_sv_100
+p_HP_25 <- comparar_densidades(d_tf_HP_25_SM, d_tf_HP_25_NM, "HP 25% Ocupación", "[μs]")
+p_HP_50 <- comparar_densidades(d_tf_HP_50_SM, d_tf_HP_50_NM, "HP 50% Ocupación", "[μs]")
+p_HP_75 <- comparar_densidades(d_tf_HP_75_SM, d_tf_HP_75_NM, "HP 75% Ocupación", "[μs]")
+p_HP_100 <- comparar_densidades(d_tf_HP_100_SM, d_tf_HP_100_NM, "HP 100% Ocupación", "[μs]")
+plot_grid(p_HP_25, p_HP_50, p_HP_75, p_HP_100, ncol = 2, nrow = 2)
+
+p_LP_25 <- comparar_densidades(d_tf_LP_25_SM, d_tf_LP_25_NM, "LP 25% Ocupación", "[μs]")
+p_LP_50 <- comparar_densidades(d_tf_LP_50_SM, d_tf_LP_50_NM, "LP 50% Ocupación", "[μs]")
+p_LP_75 <- comparar_densidades(d_tf_LP_75_SM, d_tf_LP_75_NM, "LP 75% Ocupación", "[μs]")
+p_LP_100 <- comparar_densidades(d_tf_LP_100_SM, d_tf_LP_100_NM, "LP 100% Ocupación", "[μs]")
+plot_grid(p_LP_25, p_LP_50, p_LP_75, p_LP_100, ncol = 2, nrow = 2)
+
+```
